@@ -23,7 +23,7 @@
         /* --- 2. PLAIN BLUE CHAT SCREEN --- */
         #chatScreen {
             display: none; width: 100%; height: 100%; background: linear-gradient(to bottom, #1a2a6c, #275998);
-            padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 60px;
+            padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 40px;
         }
         .chat-box {
             max-width: 450px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;
@@ -70,6 +70,8 @@
             100% { transform: scale(1); }
         }
         .shake-active { animation: heartbeatShake 0.3s infinite linear; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body id="body">
@@ -125,17 +127,17 @@
 
         function nextStage(stage) {
             if (stage === 1) {
-                document.getElementById('opt1').style.display = 'none';
+                document.getElementById('opt1').classList.add('hidden'); 
                 document.getElementById('msg2').classList.remove('hidden');
                 document.getElementById('msg3').classList.remove('hidden');
                 document.getElementById('opt2').classList.remove('hidden');
             } else if (stage === 2) {
-                document.getElementById('opt2').style.display = 'none';
+                document.getElementById('opt2').classList.add('hidden');
                 document.getElementById('msg4').classList.remove('hidden');
                 document.getElementById('msg5').classList.remove('hidden');
                 document.getElementById('opt3').classList.remove('hidden');
             } else if (stage === 3) {
-                document.getElementById('opt3').style.display = 'none';
+                document.getElementById('opt3').classList.add('hidden');
                 document.getElementById('msg6').classList.remove('hidden');
                 document.getElementById('opt4').classList.remove('hidden');
             } else if (stage === 4) {
@@ -144,7 +146,6 @@
             }
         }
 
-        // Heartbeat screen shake and button teleport mechanics
         function teleportNo() {
             document.getElementById('body').classList.add('shake-active');
             
