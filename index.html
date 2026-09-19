@@ -59,9 +59,9 @@
         .btn-yes { background: #0084ff; color: white; left: 0; width: 48%; }
         .btn-no { background: #334155; color: #cbd5e1; right: 0; width: 48%; transition: transform 0.1s ease; }
 
-        /* --- 4. NEW DEDICATED SUCCESS SCREEN --- */
+        /* --- 4. PERFECT NEW SUCCESS SCREEN --- */
         #successScreen {
-            display: none; position: fixed; inset: 0; background: #4c0519; /* Dark rose-pink background */
+            display: none; position: fixed; inset: 0; background: #4c0519; /* Elegant dark rose-pink */
             justify-content: center; align-items: center; flex-direction: column; z-index: 600; text-align: center;
             padding: 20px; overflow: hidden;
         }
@@ -70,9 +70,9 @@
             z-index: 10; padding: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         
-        /* Floating Hearts Layer */
+        /* Floating Hearts Animations */
         .heart {
-            position: absolute; color: rgba(244, 63, 94, 0.4); font-size: 24px;
+            position: absolute; color: rgba(244, 63, 94, 0.5); font-size: 28px;
             animation: floatUp 4s linear infinite; bottom: -50px;
         }
         @keyframes floatUp {
@@ -134,7 +134,7 @@
         </div>
     </div>
 
-    <!-- 4. NEW DEDICATED SUCCESS SCREEN -->
+    <!-- 4. PERFECT NEW SUCCESS SCREEN WITH FLOATING HEARTS -->
     <div id="successScreen">
         <div class="success-message">
             thx lakshanya lets meet in tution 💖
@@ -169,7 +169,6 @@
         }
 
         function teleportNo() {
-            // Screen only shakes while dealing with the "No" button
             document.getElementById('body').classList.add('shake-active');
             
             const btn = document.getElementById('noBtn');
@@ -180,16 +179,18 @@
         }
 
         function showSuccess() {
-            // Completely disable screen shaking instantly
+            // Stops screen shaking completely the millisecond she clicks Yes
             document.getElementById('body').classList.remove('shake-active');
             
-            // Switch to the custom pink message screen
+            // Hides the question screen entirely
             document.getElementById('confessionScreen').style.display = 'none';
+            
+            // Reveals the beautiful pink screen layout
             const successView = document.getElementById('successScreen');
             successView.style.display = 'flex';
             
-            // Generate live floating hearts in the background dynamically
-            setInterval(createHeart, 300);
+            // Spawns smooth floating hearts endlessly in the background
+            setInterval(createHeart, 250);
         }
 
         function createHeart() {
@@ -201,7 +202,7 @@
             heart.style.animationDuration = Math.random() * 2 + 3 + 's'; 
             successView.appendChild(heart);
             
-            setTimeout(() => { heart.remove(); }, 5000);
+            setTimeout(() => { heart.remove(); }, 4500);
         }
     </script>
 </body>
