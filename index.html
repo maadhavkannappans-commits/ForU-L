@@ -6,7 +6,7 @@
     <title>ForU-L</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #1a2a6c; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #1a2a6c; transition: background 0.5s ease; }
 
         /* --- 1. STEALTH LOADING SCREEN --- */
         #loadingScreen {
@@ -20,10 +20,10 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* --- 2. PLAIN BLUE CHAT SCREEN --- */
+        /* --- 2. PLAIN BLUE CHAT CANVAS --- */
         #chatScreen {
             display: none; width: 100%; height: 100%; background: linear-gradient(to bottom, #1a2a6c, #275998);
-            padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 40px;
+            padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 60px;
         }
         .chat-box {
             max-width: 450px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;
@@ -33,7 +33,6 @@
         }
         .bubble.me { background: #0084ff; align-self: flex-start; border-bottom-left-radius: 4px; }
         
-        /* Plain Option Click Buttons */
         .btn-option {
             background: #ffffff; color: #0084ff; border: none; padding: 12px;
             border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 15px;
@@ -58,7 +57,28 @@
             position: absolute; height: 45px; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer;
         }
         .btn-yes { background: #0084ff; color: white; left: 0; width: 48%; }
-        .btn-no { background: #334155; color: #cbd5e1; right: 0; width: 48%; transition: all 0.1s ease; }
+        .btn-no { background: #334155; color: #cbd5e1; right: 0; width: 48%; transition: transform 0.1s ease; }
+
+        /* --- 4. NEW DEDICATED SUCCESS SCREEN --- */
+        #successScreen {
+            display: none; position: fixed; inset: 0; background: #4c0519; /* Dark rose-pink background */
+            justify-content: center; align-items: center; flex-direction: column; z-index: 600; text-align: center;
+            padding: 20px; overflow: hidden;
+        }
+        .success-message {
+            color: #fff; font-size: 26px; font-weight: 800; line-height: 1.4; max-width: 400px;
+            z-index: 10; padding: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        /* Floating Hearts Layer */
+        .heart {
+            position: absolute; color: rgba(244, 63, 94, 0.4); font-size: 24px;
+            animation: floatUp 4s linear infinite; bottom: -50px;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
 
         /* Heartbeat Screen Shake Animation */
         @keyframes heartbeatShake {
@@ -85,21 +105,17 @@
     <!-- 2. BLUE CHAT CANVAS -->
     <div id="chatScreen">
         <div class="chat-box">
-            <!-- Stage 1 -->
             <div id="msg1" class="bubble me">how are you like THIS!!</div>
             <button id="opt1" class="btn-option" onclick="nextStage(1)">HUH?</button>
 
-            <!-- Stage 2 -->
             <div id="msg2" class="bubble me hidden">how are you BEAUTIFUL like this!!</div>
             <div id="msg3" class="bubble me hidden">HEY Lakshanya, somethings on your cheek!!</div>
             <button id="opt2" class="btn-option hidden" onclick="nextStage(2)">what's THEREE!!</button>
 
-            <!-- Stage 3 -->
             <div id="msg4" class="bubble me hidden">Its your cuteness</div>
             <div id="msg5" class="bubble me hidden">How are you doing this without a pencil</div>
             <button id="opt3" class="btn-option hidden" onclick="nextStage(3)">DOING WHAT?</button>
 
-            <!-- Transition Step -->
             <div id="msg6" class="bubble me hidden">drawing attraction to YOU 💖</div>
             <button id="opt4" class="btn-option hidden" onclick="nextStage(4)">Tap to open message...</button>
         </div>
@@ -112,14 +128,20 @@
             <p>Lakshanya, every conversation with you makes my day brighter.</p>
             
             <div class="choice-container">
-                <button class="btn-choice btn-yes" onclick="sendResponse('YES')">Yes, me too!</button>
-                <button id="noBtn" class="btn-choice btn-no" onmouseover="teleportNo()">No sorry 💔</button>
+                <button class="btn-choice btn-yes" onclick="showSuccess()">Yes, me too!</button>
+                <button id="noBtn" class="btn-choice btn-no" onmouseover="teleportNo()" ontouchstart="teleportNo()">No sorry 💔</button>
             </div>
         </div>
     </div>
 
+    <!-- 4. NEW DEDICATED SUCCESS SCREEN -->
+    <div id="successScreen">
+        <div class="success-message">
+            thx lakshanya lets meet in tution 💖
+        </div>
+    </div>
+
     <script>
-        // Fake stealth load sequence
         setTimeout(() => {
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('chatScreen').style.display = 'flex';
@@ -147,6 +169,7 @@
         }
 
         function teleportNo() {
+            // Screen only shakes while dealing with the "No" button
             document.getElementById('body').classList.add('shake-active');
             
             const btn = document.getElementById('noBtn');
@@ -156,11 +179,29 @@
             btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
         }
 
-        function sendResponse(answer) {
+        function showSuccess() {
+            // Completely disable screen shaking instantly
             document.getElementById('body').classList.remove('shake-active');
-            if(answer === 'YES') {
-                alert("thx lakshanya lets meet in tution");
-            }
+            
+            // Switch to the custom pink message screen
+            document.getElementById('confessionScreen').style.display = 'none';
+            const successView = document.getElementById('successScreen');
+            successView.style.display = 'flex';
+            
+            // Generate live floating hearts in the background dynamically
+            setInterval(createHeart, 300);
+        }
+
+        function createHeart() {
+            const successView = document.getElementById('successScreen');
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerText = '💖';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's'; 
+            successView.appendChild(heart);
+            
+            setTimeout(() => { heart.remove(); }, 5000);
         }
     </script>
 </body>
