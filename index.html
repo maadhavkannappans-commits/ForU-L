@@ -6,7 +6,7 @@
     <title>ForU-L</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #1a2a6c; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #1a2a6c; transition: background 0.5s ease; }
 
         /* --- 1. STEALTH LOADING SCREEN --- */
         #loadingScreen {
@@ -20,73 +20,24 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* --- 2. ENHANCED CHAT CANVAS --- */
+        /* --- 2. PLAIN BLUE CHAT CANVAS --- */
         #chatScreen {
             display: none; width: 100%; height: 100%; background: linear-gradient(to bottom, #1a2a6c, #275998);
-            flex-direction: column; justify-content: space-between;
+            padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 60px;
         }
-        
-        /* Fixed Chat Header */
-        .chat-header {
-            background: rgba(26, 42, 108, 0.8); backdrop-filter: blur(10px);
-            padding: 15px 20px; color: white; font-weight: bold; font-size: 18px;
-            border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 10;
+        .chat-box {
+            max-width: 450px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;
         }
-        .chat-status { font-size: 12px; color: #4ade80; font-weight: normal; margin-top: 2px; }
-
-        /* Scrollable Message History Area */
-        .chat-messages {
-            flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px;
-            scroll-behavior: smooth; padding-bottom: 20px;
-        }
-
-        /* Message Containers for aligning left/right properly */
-        .msg-row {
-            display: flex;
-            width: 100%;
-        }
-        .msg-row.left { justify-content: flex-start; }
-        .msg-row.right { justify-content: flex-end; }
-
-        /* Chat Bubbles */
         .bubble {
-            padding: 12px 16px; border-radius: 18px; max-width: 80%; font-size: 16px; line-height: 1.4; color: white;
-            animation: fadeInMsg 0.3s ease-out forwards; transform: translateY(10px);
+            padding: 12px 16px; border-radius: 18px; max-width: 85%; font-size: 16px; line-height: 1.4; color: white;
         }
-        @keyframes fadeInMsg { to { transform: translateY(0); } }
-
-        /* Left side bubbles (My Chat) */
-        .bubble.me { background: #0084ff; border-bottom-left-radius: 4px; }
+        .bubble.me { background: #0084ff; align-self: flex-start; border-bottom-left-radius: 4px; }
         
-        /* Right side bubbles (Her Responses) */
-        .bubble.her { background: #10b981; border-bottom-right-radius: 4px; }
-
-        /* Typing Indicator Bubble */
-        .typing-indicator {
-            background: rgba(255,255,255,0.15); border-radius: 18px;
-            border-bottom-left-radius: 4px; padding: 14px 20px; display: flex; gap: 4px; align-items: center;
-        }
-        .typing-indicator span {
-            width: 8px; height: 8px; background: #fff; border-radius: 50%;
-            animation: bounce 1.3s infinite ease-in-out; opacity: 0.6;
-        }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
-        @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
-
-        /* Bottom Fixed Action Panel */
-        .chat-controls {
-            padding: 15px 20px; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255,255,255,0.05); min-height: 75px; display: flex; align-items: center;
-            justify-content: center;
-        }
         .btn-option {
-            background: #ffffff; color: #0084ff; border: none; padding: 14px;
-            border-radius: 25px; font-weight: 600; cursor: pointer; font-size: 15px;
-            width: 100%; max-width: 450px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transition: transform 0.1s ease;
+            background: #ffffff; color: #0084ff; border: none; padding: 12px;
+            border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 15px;
+            width: 100%; text-align: center; margin-top: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .btn-option:active { transform: scale(0.98); }
 
         /* --- 3. CLEAN CONFESSION SCREEN --- */
         #confessionScreen {
@@ -106,11 +57,11 @@
             position: absolute; height: 45px; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer;
         }
         .btn-yes { background: #0084ff; color: white; left: 0; width: 48%; }
-        .btn-no { background: #334155; color: #cbd5e1; right: 0; width: 48%; transition: all 0.2s ease; }
+        .btn-no { background: #334155; color: #cbd5e1; right: 0; width: 48%; transition: transform 0.1s ease; }
 
         /* --- 4. PERFECT NEW SUCCESS SCREEN --- */
         #successScreen {
-            display: none; position: fixed; inset: 0; background: #4c0519;
+            display: none; position: fixed; inset: 0; background: #4c0519; /* Elegant dark rose-pink */
             justify-content: center; align-items: center; flex-direction: column; z-index: 600; text-align: center;
             padding: 20px; overflow: hidden;
         }
@@ -119,15 +70,17 @@
             z-index: 10; padding: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         
+        /* Floating Hearts Animations */
         .heart {
-            position: absolute; color: rgba(244, 63, 94, 0.6); font-size: 28px;
-            animation: floatUp 4s linear infinite; bottom: -50px; user-select: none; pointer-events: none;
+            position: absolute; color: rgba(244, 63, 94, 0.5); font-size: 28px;
+            animation: floatUp 4s linear infinite; bottom: -50px;
         }
         @keyframes floatUp {
             0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
         }
 
+        /* Heartbeat Screen Shake Animation */
         @keyframes heartbeatShake {
             0% { transform: scale(1); }
             20% { transform: scale(1.02) translate(-1px, 1px); }
@@ -149,22 +102,22 @@
         <div class="spinner"></div>
     </div>
 
-    <!-- 2. UPGRADED CHAT SCREEN -->
+    <!-- 2. BLUE CHAT CANVAS -->
     <div id="chatScreen">
-        <div class="chat-header">
-            <div>Anirudh</div>
-            <div class="chat-status" id="chatStatus">online</div>
-        </div>
+        <div class="chat-box">
+            <div id="msg1" class="bubble me">how are you like THIS!!</div>
+            <button id="opt1" class="btn-option" onclick="nextStage(1)">HUH?</button>
 
-        <div class="chat-messages" id="chatMessages">
-            <!-- First message row explicitly structural -->
-            <div class="msg-row left">
-                <div class="bubble me">how are you like THIS!!</div>
-            </div>
-        </div>
+            <div id="msg2" class="bubble me hidden">how are you BEAUTIFUL like this!!</div>
+            <div id="msg3" class="bubble me hidden">HEY Lakshanya, somethings on your cheek!!</div>
+            <button id="opt2" class="btn-option hidden" onclick="nextStage(2)">what's THEREE!!</button>
 
-        <div class="chat-controls">
-            <button id="actionBtn" class="btn-option" onclick="handleOptionClick(1)">HUH?</button>
+            <div id="msg4" class="bubble me hidden">Its your cuteness</div>
+            <div id="msg5" class="bubble me hidden">How are you doing this without a pencil</div>
+            <button id="opt3" class="btn-option hidden" onclick="nextStage(3)">DOING WHAT?</button>
+
+            <div id="msg6" class="bubble me hidden">drawing attraction to YOU 💖</div>
+            <button id="opt4" class="btn-option hidden" onclick="nextStage(4)">Tap to open message...</button>
         </div>
     </div>
 
@@ -176,12 +129,12 @@
             
             <div class="choice-container">
                 <button class="btn-choice btn-yes" onclick="showSuccess()">Yes, me too!</button>
-                <button id="noBtn" class="btn-choice btn-no" onmouseover="teleportNo()" ontouchstart="teleportNo(event)">No sorry 💔</button>
+                <button id="noBtn" class="btn-choice btn-no" onmouseover="teleportNo()" ontouchstart="teleportNo()">No sorry 💔</button>
             </div>
         </div>
     </div>
 
-    <!-- 4. PERFECT SUCCESS SCREEN -->
+    <!-- 4. PERFECT NEW SUCCESS SCREEN WITH FLOATING HEARTS -->
     <div id="successScreen">
         <div class="success-message">
             thx lakshanya lets meet in tution 💖
@@ -189,44 +142,68 @@
     </div>
 
     <script>
-        const chatFlow = {
-            1: {
-                userReply: "HUH?",
-                typingDuration: 1200,
-                botMessages: ["how are you BEAUTIFUL like this!!", "HEY Lakshanya, somethings on your cheek!!"],
-                nextBtnText: "what's THEREE!!",
-                nextStage: 2
-            },
-            2: {
-                userReply: "what's THEREE!!",
-                typingDuration: 1200,
-                botMessages: ["Its your cuteness", "How are you doing this without a pencil"],
-                nextBtnText: "DOING WHAT?",
-                nextStage: 3
-            },
-            3: {
-                userReply: "DOING WHAT?",
-                typingDuration: 1200,
-                botMessages: ["drawing attraction to YOU 💖"],
-                nextBtnText: "Tap to open message...",
-                nextStage: 4
-            }
-        };
-
-        const chatMessages = document.getElementById('chatMessages');
-        const actionBtn = document.getElementById('actionBtn');
-        const chatStatus = document.getElementById('chatStatus');
-
         setTimeout(() => {
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('chatScreen').style.display = 'flex';
-            scrollToBottom();
         }, 2200);
 
-        function scrollToBottom() {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        function nextStage(stage) {
+            if (stage === 1) {
+                document.getElementById('opt1').classList.add('hidden'); 
+                document.getElementById('msg2').classList.remove('hidden');
+                document.getElementById('msg3').classList.remove('hidden');
+                document.getElementById('opt2').classList.remove('hidden');
+            } else if (stage === 2) {
+                document.getElementById('opt2').classList.add('hidden');
+                document.getElementById('msg4').classList.remove('hidden');
+                document.getElementById('msg5').classList.remove('hidden');
+                document.getElementById('opt3').classList.remove('hidden');
+            } else if (stage === 3) {
+                document.getElementById('opt3').classList.add('hidden');
+                document.getElementById('msg6').classList.remove('hidden');
+                document.getElementById('opt4').classList.remove('hidden');
+            } else if (stage === 4) {
+                document.getElementById('chatScreen').style.display = 'none';
+                document.getElementById('confessionScreen').style.display = 'flex';
+            }
         }
 
-        function handleOptionClick(stage) {
-            if (stage === 4) {
-                document.getElementById('chatScreen').style.display = 'none';
+        function teleportNo() {
+            document.getElementById('body').classList.add('shake-active');
+            
+            const btn = document.getElementById('noBtn');
+            const randomX = Math.floor(Math.random() * 140) - 70; 
+            const randomY = Math.floor(Math.random() * 220) - 160; 
+            
+            btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        function showSuccess() {
+            // Stops screen shaking completely the millisecond she clicks Yes
+            document.getElementById('body').classList.remove('shake-active');
+            
+            // Hides the question screen entirely
+            document.getElementById('confessionScreen').style.display = 'none';
+            
+            // Reveals the beautiful pink screen layout
+            const successView = document.getElementById('successScreen');
+            successView.style.display = 'flex';
+            
+            // Spawns smooth floating hearts endlessly in the background
+            setInterval(createHeart, 250);
+        }
+
+        function createHeart() {
+            const successView = document.getElementById('successScreen');
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerText = '💖';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's'; 
+            successView.appendChild(heart);
+            
+            setTimeout(() => { heart.remove(); }, 4500);
+        }
+    </script>
+</body>
+</html>
