@@ -20,26 +20,23 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* --- 2. CLEAN BLUE CHAT CANVAS --- */
+        /* --- 2. PLAIN BLUE CHAT CANVAS --- */
         #chatScreen {
             display: none; width: 100%; height: 100%; background: linear-gradient(to bottom, #1a2a6c, #275998);
-            padding: 20px; flex-direction: column; justify-content: flex-end; padding-bottom: 60px;
+            padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 60px;
         }
         .chat-box {
             max-width: 450px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;
         }
         .bubble {
             padding: 12px 16px; border-radius: 18px; max-width: 85%; font-size: 16px; line-height: 1.4; color: white;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         .bubble.me { background: #0084ff; align-self: flex-start; border-bottom-left-radius: 4px; }
-        .bubble.her { background: rgba(255, 255, 255, 0.2); align-self: flex-end; border-bottom-right-radius: 4px; backdrop-filter: blur(5px); }
         
-        /* Plain Option Click Buttons */
         .btn-option {
-            background: #ffffff; color: #0084ff; border: none; padding: 14px;
+            background: #ffffff; color: #0084ff; border: none; padding: 12px;
             border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 15px;
-            width: 100%; text-align: center; margin-top: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            width: 100%; text-align: center; margin-top: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         /* --- 3. CLEAN CONFESSION SCREEN --- */
@@ -62,9 +59,9 @@
         .btn-yes { background: #0084ff; color: white; left: 0; width: 48%; }
         .btn-no { background: #334155; color: #cbd5e1; right: 0; width: 48%; transition: transform 0.1s ease; }
 
-        /* --- 4. PERFECT SUCCESS SCREEN WITH FLOATING HEARTS --- */
+        /* --- 4. PERFECT NEW SUCCESS SCREEN --- */
         #successScreen {
-            display: none; position: fixed; inset: 0; background: #4c0519; /* Elegant dark rose background */
+            display: none; position: fixed; inset: 0; background: #4c0519; /* Elegant dark rose-pink */
             justify-content: center; align-items: center; flex-direction: column; z-index: 600; text-align: center;
             padding: 20px; overflow: hidden;
         }
@@ -72,8 +69,10 @@
             color: #fff; font-size: 26px; font-weight: 800; line-height: 1.4; max-width: 400px;
             z-index: 10; padding: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
+        
+        /* Floating Hearts Animations */
         .heart {
-            position: absolute; color: rgba(244, 63, 94, 0.6); font-size: 28px;
+            position: absolute; color: rgba(244, 63, 94, 0.5); font-size: 28px;
             animation: floatUp 4s linear infinite; bottom: -50px;
         }
         @keyframes floatUp {
@@ -91,6 +90,7 @@
             100% { transform: scale(1); }
         }
         .shake-active { animation: heartbeatShake 0.3s infinite linear; }
+
         .hidden { display: none !important; }
     </style>
 </head>
@@ -105,24 +105,17 @@
     <!-- 2. BLUE CHAT CANVAS -->
     <div id="chatScreen">
         <div class="chat-box">
-            <!-- Stage 1 -->
             <div id="msg1" class="bubble me">how are you like THIS!!</div>
             <button id="opt1" class="btn-option" onclick="nextStage(1)">HUH?</button>
 
-            <!-- Stage 2 -->
-            <div id="reply1" class="bubble her hidden">HUH?</div>
             <div id="msg2" class="bubble me hidden">how are you BEAUTIFUL like this!!</div>
             <div id="msg3" class="bubble me hidden">HEY Lakshanya, somethings on your cheek!!</div>
             <button id="opt2" class="btn-option hidden" onclick="nextStage(2)">what's THEREE!!</button>
 
-            <!-- Stage 3 -->
-            <div id="reply2" class="bubble her hidden">what's THEREE!!</div>
             <div id="msg4" class="bubble me hidden">Its your cuteness</div>
             <div id="msg5" class="bubble me hidden">How are you doing this without a pencil</div>
             <button id="opt3" class="btn-option hidden" onclick="nextStage(3)">DOING WHAT?</button>
 
-            <!-- Final Transition Step -->
-            <div id="reply3" class="bubble her hidden">DOING WHAT?</div>
             <div id="msg6" class="bubble me hidden">drawing attraction to YOU 💖</div>
             <button id="opt4" class="btn-option hidden" onclick="nextStage(4)">Tap to open message...</button>
         </div>
@@ -141,7 +134,7 @@
         </div>
     </div>
 
-    <!-- 4. PERFECT SUCCESS SCREEN WITH FLOATING HEARTS -->
+    <!-- 4. PERFECT NEW SUCCESS SCREEN WITH FLOATING HEARTS -->
     <div id="successScreen">
         <div class="success-message">
             thx lakshanya lets meet in tution 💖
@@ -149,33 +142,29 @@
     </div>
 
     <script>
-        // Solid layout display loop trigger
         setTimeout(() => {
-            document.getElementById('loadingScreen').style.setProperty('display', 'none', 'important');
-            document.getElementById('chatScreen').style.setProperty('display', 'flex', 'important');
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('chatScreen').style.display = 'flex';
         }, 2200);
 
         function nextStage(stage) {
             if (stage === 1) {
                 document.getElementById('opt1').classList.add('hidden'); 
-                document.getElementById('reply1').classList.remove('hidden');
                 document.getElementById('msg2').classList.remove('hidden');
                 document.getElementById('msg3').classList.remove('hidden');
                 document.getElementById('opt2').classList.remove('hidden');
             } else if (stage === 2) {
                 document.getElementById('opt2').classList.add('hidden');
-                document.getElementById('reply2').classList.remove('hidden');
                 document.getElementById('msg4').classList.remove('hidden');
                 document.getElementById('msg5').classList.remove('hidden');
                 document.getElementById('opt3').classList.remove('hidden');
             } else if (stage === 3) {
                 document.getElementById('opt3').classList.add('hidden');
-                document.getElementById('reply3').classList.remove('hidden');
                 document.getElementById('msg6').classList.remove('hidden');
                 document.getElementById('opt4').classList.remove('hidden');
             } else if (stage === 4) {
-                document.getElementById('chatScreen').style.setProperty('display', 'none', 'important');
-                document.getElementById('confessionScreen').style.setProperty('display', 'flex', 'important');
+                document.getElementById('chatScreen').style.display = 'none';
+                document.getElementById('confessionScreen').style.display = 'flex';
             }
         }
 
@@ -190,8 +179,31 @@
         }
 
         function showSuccess() {
+            // Stops screen shaking completely the millisecond she clicks Yes
             document.getElementById('body').classList.remove('shake-active');
-            document.getElementById('confessionScreen').style.setProperty('display', 'none', 'important');
-            document.getElementById('successScreen').style.setProperty('display', 'flex', 'important');
+            
+            // Hides the question screen entirely
+            document.getElementById('confessionScreen').style.display = 'none';
+            
+            // Reveals the beautiful pink screen layout
+            const successView = document.getElementById('successScreen');
+            successView.style.display = 'flex';
+            
+            // Spawns smooth floating hearts endlessly in the background
             setInterval(createHeart, 250);
         }
+
+        function createHeart() {
+            const successView = document.getElementById('successScreen');
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerText = '💖';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's'; 
+            successView.appendChild(heart);
+            
+            setTimeout(() => { heart.remove(); }, 4500);
+        }
+    </script>
+</body>
+</html>
