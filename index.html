@@ -26,7 +26,7 @@
             flex-direction: column; justify-content: space-between;
         }
         
-        /* Fixed Chat Header for a real app feel */
+        /* Fixed Chat Header */
         .chat-header {
             background: rgba(26, 42, 108, 0.8); backdrop-filter: blur(10px);
             padding: 15px 20px; color: white; font-weight: bold; font-size: 18px;
@@ -43,9 +43,9 @@
         /* Chat Bubbles */
         .bubble {
             padding: 12px 16px; border-radius: 18px; max-width: 80%; font-size: 16px; line-height: 1.4; color: white;
-            animation: fadeInMsg 0.3s ease-out forwards; opacity: 0; transform: translateY(10px);
+            animation: fadeInMsg 0.3s ease-out forwards; transform: translateY(10px);
         }
-        @keyframes fadeInMsg { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInMsg { to { transform: translateY(0); } }
 
         /* Left side bubbles (My Chat) */
         .bubble.me { background: #0084ff; align-self: flex-start; border-bottom-left-radius: 4px; }
@@ -148,11 +148,11 @@
         </div>
 
         <div class="chat-messages" id="chatMessages">
-            <!-- First message template starts pre-loaded -->
+            <!-- First message starts loaded -->
             <div class="bubble me">how are you like THIS!!</div>
         </div>
 
-        <div class="chat-controls" id="chatControls">
+        <div class="chat-controls">
             <button id="actionBtn" class="btn-option" onclick="handleOptionClick(1)">HUH?</button>
         </div>
     </div>
@@ -178,25 +178,28 @@
     </div>
 
     <script>
-        // Dialog system map defining the true message chain sequence
-        const scriptStages = {
+        // Simple, bulletproof stage configurations matching your original text flows
+        const chatFlow = {
             1: {
-                replyText: "HUH?",
-                nextMessages: ["how are you BEAUTIFUL like this!!", "HEY Lakshanya, somethings on your cheek!!"],
-                nextOption: "what's THEREE!!",
-                nextStageNum: 2
+                userReply: "HUH?",
+                typingDuration: 1200,
+                botMessages: ["how are you BEAUTIFUL like this!!", "HEY Lakshanya, somethings on your cheek!!"],
+                nextBtnText: "what's THEREE!!",
+                nextStage: 2
             },
             2: {
-                replyText: "what's THEREE!!",
-                nextMessages: ["Its your cuteness", "How are you doing this without a pencil"],
-                nextOption: "DOING WHAT?",
-                nextStageNum: 3
+                userReply: "what's THEREE!!",
+                typingDuration: 1200,
+                botMessages: ["Its your cuteness", "How are you doing this without a pencil"],
+                nextBtnText: "DOING WHAT?",
+                nextStage: 3
             },
             3: {
-                replyText: "DOING WHAT?",
-                nextMessages: ["drawing attraction to YOU 💖"],
-                nextOption: "Tap to open message...",
-                nextStageNum: 4
+                userReply: "DOING WHAT?",
+                typingDuration: 1200,
+                botMessages: ["drawing attraction to YOU 💖"],
+                nextBtnText: "Tap to open message...",
+                nextStage: 4
             }
         };
 
@@ -204,6 +207,7 @@
         const actionBtn = document.getElementById('actionBtn');
         const chatStatus = document.getElementById('chatStatus');
 
+        // Bulletproof basic timeout loading clean exit (identical to your original version)
         setTimeout(() => {
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('chatScreen').style.display = 'flex';
@@ -214,14 +218,10 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        function handleOptionClick(currentStage) {
-            if (currentStage === 4) {
+        function handleOptionClick(stage) {
+            if (stage === 4) {
                 document.getElementById('chatScreen').style.display = 'none';
                 document.getElementById('confessionScreen').style.display = 'flex';
                 return;
             }
 
-            const stageData = scriptStages[currentStage];
-            if (!stageData) return;
-
-            // 1. Hide the options board during the transaction
